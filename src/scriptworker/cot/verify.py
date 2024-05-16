@@ -378,6 +378,11 @@ def guess_worker_impl(link):
         if scope.startswith("docker-worker:"):
             worker_impls.append("docker-worker")
 
+    if task.get("tags", {}).get("docker-worker-implementation", "") == "generic-worker":
+        worker_impls.append("generic-worker")
+        if "docker-worker" in worker_impls:
+            worker_impls.remove("docker-worker")
+
     if not worker_impls:
         errors.append("guess_worker_impl: can't find a worker_impl for {}!\n{}".format(name, task))
     if len(set(worker_impls)) > 1:
